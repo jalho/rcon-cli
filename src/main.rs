@@ -1,13 +1,20 @@
 fn main() {
-    // TODO: get RCON password as CLI arg
-    let url = "ws://localhost:28016/SET_ME";
+    #[derive(clap::Parser, Debug)]
+    struct Args {
+        #[arg(short, long)]
+        password: String,
 
-    // TODO: get sendable message as CLI arg
-    let sendable_message = "{\"Identifier\":1,\"Message\":\"playerlist\"}";
+        #[arg(short, long)]
+        command: String,
+    }
+
+    let args = <Args as clap::Parser>::parse();
+    let url: String = format!("ws://localhost:28016/{}", args.password);
+    let sendable_message: String = format!("{{\"Identifier\":1,\"Message\":\"{}\"}}", args.command);
 
     // connect
     let (mut socket, _) =
-        tungstenite::connect(url).expect(&format!("Failed to connect to {}", url));
+        tungstenite::connect(&url).expect(&format!("Failed to connect to {}", url));
     println!("Failed to connect to {}", url);
 
     // send message
