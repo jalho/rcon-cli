@@ -1,3 +1,5 @@
+// TODO: error handling :D
+
 fn main() {
     #[derive(clap::Parser, Debug)]
     struct Args {
@@ -12,14 +14,18 @@ fn main() {
     let url: String = format!("ws://localhost:28016/{}", args.password);
     let sendable_message: String = format!("{{\"Identifier\":1,\"Message\":\"{}\"}}", args.command);
 
-    // connect
-    let (mut socket, _) =
-        tungstenite::connect(&url).expect(&format!("Failed to connect to {}", url));
-    println!("Failed to connect to {}", url);
+    let result_connect = tungstenite::connect(&url);
+    let mut socket: tungstenite::WebSocket<tungstenite::stream::MaybeTlsStream<std::net::TcpStream>>;
+    match result_connect {
+        Ok(v) => {
+            let (s, _) = v;
+            socket = s;
+        }
+        Err(_) => todo!(),
+    }
 
-    // send message
     let message = tungstenite::Message::Text(sendable_message.into());
-    socket.send(message).expect("Failed to send message.");
+    socket.send(message).expect("Failed to send message");
 
     // TODO: wait till some timeout for a response matching the Identifier
     let receive_thread = std::thread::spawn(move || loop {
@@ -32,7 +38,7 @@ fn main() {
                     println!("Received binary data: {:?}", data);
                 }
                 tungstenite::Message::Close(_) => {
-                    println!("WebSocket closed by the server.");
+                    println!("WebSocket closed by the server");
                     break;
                 }
                 _ => {}
