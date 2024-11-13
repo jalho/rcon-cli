@@ -1,29 +1,15 @@
 # `rcon-cli`
 
-Example of usage as of `1494d337c`:
-
 ```
-$ rcon-cli --password "foobar" --command "playerlist"
-Received message: {
-  "Message": "[]",
-  "Identifier": 1,
-  "Type": "Generic",
-  "Stacktrace": ""
-}
-```
+Usage: rcon-cli --rcon-connection-string <RCON_CONNECTION_STRING> --command <COMMAND>
 
-## Command reference
-
-Some RCON commands issuable like so:
-
-```
-$ rcon-cli -p "Your_Rcon_Password" -c "server.description \\\"Weekly wiped low pop vanilla server.\nSchedule: Map wipes every Friday at 14 UTC.\\\""
-Received message: {
-  "Message": "server.hostname: \"'Reindeerland Vanilla'\"",
-  "Identifier": 1,
-  "Type": "Generic",
-  "Stacktrace": ""
-}
+Options:
+  -r, --rcon-connection-string <RCON_CONNECTION_STRING>
+          Connection string: E.g. 'ws://192.168.0.103:28016/Your_Rcon_Password'
+  -c, --command <COMMAND>
+          RCON command: E.g. 'ownerid 76561198135242017'
+  -h, --help
+          Print help
 ```
 
 | command                                                                                                                                                                                                                | description                                                                                                                                                                                                                                          | tested (version)              |
